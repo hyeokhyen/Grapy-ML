@@ -1,1 +1,4 @@
+*.nfs*
+result/
+data/
 *.pyc
