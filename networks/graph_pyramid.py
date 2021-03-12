@@ -90,21 +90,23 @@ class GraphPyramidModule(nn.Module):
 		# print(featuremap.shape, mask.shape)
 		# print(mask.shape)
 		n, h, w = mask.shape
+		# print (mask.get_device())
+		# assert False
 
-		maskmap_ave = torch.zeros(n, class_num, h, w).cuda()
-		maskmap_max = torch.zeros(n, class_num, h, w).cuda()
+		maskmap_ave = torch.zeros(n, class_num, h, w).to(mask.device)
+		maskmap_max = torch.zeros(n, class_num, h, w).to(mask.device)
 
 		# print(maskmap, maskmap.shape)
 
 		for i in range(class_num):
 			# print(i)
 			# print(mask)
-			class_pix = torch.where(mask == i, torch.ones(1).cuda(), torch.zeros(1).cuda())
+			class_pix = torch.where(mask == i, torch.ones(1).to(mask.device), torch.zeros(1).to(mask.device))
 			# print(temp)
 
 			class_sum = torch.sum(class_pix.view(n, h * w), dim=1)
 			# print(temp_sum)
-			class_sum = torch.where(class_sum == 0, torch.ones(1).cuda(), class_sum)
+			class_sum = torch.where(class_sum == 0, torch.ones(1).to(mask.device), class_sum)
 
 			# print(map.shape, sum.shape)
 			class_pix_ave = class_pix / class_sum.view(n, 1, 1)
@@ -123,7 +125,7 @@ class GraphPyramidModule(nn.Module):
 		for j in range(cate_num):
 			for i in cate_list[j]:
 				# print(mask.type(), torch.tensor([j], dtype=torch.int32).type())
-				mask = torch.where(mask == i, torch.tensor([j]).cuda(), mask)
+				mask = torch.where(mask == i, torch.tensor([j]).to(mask.device), mask)
 
 		return mask
 
@@ -246,20 +248,20 @@ class GraphPyramidModuleML_res(nn.Module):
 		# print(mask.shape)
 		n, h, w = mask.shape
 
-		maskmap_ave = torch.zeros(n, class_num, h, w).cuda()
-		maskmap_max = torch.zeros(n, class_num, h, w).cuda()
+		maskmap_ave = torch.zeros(n, class_num, h, w).to(mask.device)
+		maskmap_max = torch.zeros(n, class_num, h, w).to(mask.device)
 
 		# print(maskmap, maskmap.shape)
 
 		for i in range(class_num):
 			# print(i)
 			# print(mask)
-			class_pix = torch.where(mask == i, torch.ones(1).cuda(), torch.zeros(1).cuda())
+			class_pix = torch.where(mask == i, torch.ones(1).to(mask.device), torch.zeros(1).to(mask.device))
 			# print(temp)
 
 			class_sum = torch.sum(class_pix.view(n, h * w), dim=1)
 			# print(temp_sum)
-			class_sum = torch.where(class_sum == 0, torch.ones(1).cuda(), class_sum)
+			class_sum = torch.where(class_sum == 0, torch.ones(1).to(mask.device), class_sum)
 
 			# print(map.shape, sum.shape)
 			class_pix_ave = class_pix / class_sum.view(n, 1, 1)
@@ -278,7 +280,7 @@ class GraphPyramidModuleML_res(nn.Module):
 		for j in range(cate_num):
 			for i in cate_list[j]:
 				# print(mask.type(), torch.tensor([j], dtype=torch.int32).type())
-				mask = torch.where(mask == i, torch.tensor([j]).cuda(), mask)
+				mask = torch.where(mask == i, torch.tensor([j]).to(mask.device), mask)
 
 		return mask
 
@@ -426,21 +428,23 @@ class GraphPyramidModuleML(nn.Module):
 		# print(featuremap.shape, mask.shape)
 		# print(mask.shape)
 		n, h, w = mask.shape
+		# print (mask.get_device())
+		# assert False
 
-		maskmap_ave = torch.zeros(n, class_num, h, w).cuda()
-		maskmap_max = torch.zeros(n, class_num, h, w).cuda()
+		maskmap_ave = torch.zeros(n, class_num, h, w).to(mask.device)
+		maskmap_max = torch.zeros(n, class_num, h, w).to(mask.device)
 
 		# print(maskmap, maskmap.shape)
 
 		for i in range(class_num):
 			# print(i)
 			# print(mask)
-			class_pix = torch.where(mask == i, torch.ones(1).cuda(), torch.zeros(1).cuda())
+			class_pix = torch.where(mask == i, torch.ones(1).to(mask.device), torch.zeros(1).to(mask.device))
 			# print(temp)
 
 			class_sum = torch.sum(class_pix.view(n, h * w), dim=1)
 			# print(temp_sum)
-			class_sum = torch.where(class_sum == 0, torch.ones(1).cuda(), class_sum)
+			class_sum = torch.where(class_sum == 0, torch.ones(1).to(mask.device), class_sum)
 
 			# print(map.shape, sum.shape)
 			class_pix_ave = class_pix / class_sum.view(n, 1, 1)
@@ -453,13 +457,15 @@ class GraphPyramidModuleML(nn.Module):
 		return maskmap_ave, maskmap_max
 
 	def mask2catemask(self, mask, cate_list):
+		# print (mask.device)
+		# assert False
 
 		cate_num = len(cate_list)
 
 		for j in range(cate_num):
 			for i in cate_list[j]:
 				# print(mask.type(), torch.tensor([j], dtype=torch.int32).type())
-				mask = torch.where(mask == i, torch.tensor([j]).cuda(), mask)
+				mask = torch.where(mask == i, torch.tensor([j]).to(mask.device), mask)
 
 		return mask
 
