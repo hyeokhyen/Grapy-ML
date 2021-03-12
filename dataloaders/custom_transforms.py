@@ -149,12 +149,13 @@ class RandomHorizontalFlip(object):
 class HorizontalFlip(object):
     def __call__(self, sample):
         img = sample['image']
-        mask = sample['label']
+        # mask = sample['label']
         img = img.transpose(Image.FLIP_LEFT_RIGHT)
-        mask = mask.transpose(Image.FLIP_LEFT_RIGHT)
+        # mask = mask.transpose(Image.FLIP_LEFT_RIGHT)
 
-        return {'image': img,
-                'label': mask}
+        return {'image': img}
+        # return {'image': img,
+        #         'label': mask}
 
 class HorizontalFlip_only_img(object):
     def __call__(self, sample):
@@ -224,12 +225,13 @@ class Normalize_xception_tf(object):
 
     def __call__(self, sample):
         img = np.array(sample['image']).astype(np.float32)
-        mask = np.array(sample['label']).astype(np.float32)
+        # mask = np.array(sample['label']).astype(np.float32)
         img = (img*2.0)/255.0 - 1
         # print(img.shape)
         # img = img[[0,3,2,1],...]
-        return {'image': img,
-                'label': mask}
+        return {'image': img}
+        # return {'image': img,
+        #         'label': mask}
 
 class Normalize_xception_tf_only_img(object):
     # def __init__(self):
@@ -271,16 +273,24 @@ class ToTensor_(object):
         # swap color axis because
         # numpy image: H x W x C
         # torch image: C X H X W
+        # print (sample['image'].shape)
+        # print (sample['label'].shape)
+        # assert False
+
         img = np.array(sample['image']).astype(np.float32).transpose((2, 0, 1))
-        mask = np.expand_dims(np.array(sample['label']).astype(np.float32), -1).transpose((2, 0, 1))
+        # mask = np.array(sample['label']).astype(np.float32).transpose((2, 0, 1))
+        # mask = np.expand_dims(np.array(sample['label']).astype(np.float32), -1).transpose((2, 0, 1))
         # mask[mask == 255] = 0
 
         img = torch.from_numpy(img).float()
         img = self.rgb2bgr(img)
-        mask = torch.from_numpy(mask).float()
+        # mask = torch.from_numpy(mask).float()
 
-        return {'image': img,
-                'label': mask}
+        img = torch.unsqueeze(img, 0)
+
+        return {'image': img}
+        # return {'image': img,
+        #         'label': mask}
 
 class ToTensor_only_img(object):
     """Convert ndarrays in sample to Tensors."""
@@ -368,16 +378,17 @@ class Scale_(object):
 
     def __call__(self, sample):
         img = sample['image']
-        mask = sample['label']
-        assert img.size == mask.size
+        # mask = sample['label']
+        # assert img.size == mask.size
         w, h = img.size
         ow = int(w*self.scale)
         oh = int(h*self.scale)
         img = img.resize((ow, oh), Image.BILINEAR)
-        mask = mask.resize((ow, oh), Image.NEAREST)
+        # mask = mask.resize((ow, oh), Image.NEAREST)
 
-        return {'image': img,
-                'label': mask}
+        return {'image': img}
+        # return {'image': img,
+        #         'label': mask}
 
 class Scale_only_img(object):
     def __init__(self, scale):
